@@ -1,15 +1,17 @@
-// Guardamos el último comando enviado a un dispositivo
-let ultimoComando = {};
+let ultimoComando = {}; // comandos por dispositivo
 
 export async function POST(req) {
-  const body = await req.json();
-  const { nombre, comando } = body;
+  const { nombre, comando } = await req.json();
 
   if (!nombre || !comando) {
-    return new Response(JSON.stringify({ error: "Faltan datos" }), { status: 400 });
+    return new Response(
+      JSON.stringify({ error: "Faltan datos" }),
+      { status: 400 }
+    );
   }
 
   ultimoComando[nombre] = comando;
+
   return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
 }
 
@@ -18,7 +20,10 @@ export async function GET(req) {
   const nombre = searchParams.get("nombre");
 
   if (!nombre) {
-    return new Response(JSON.stringify({ error: "Falta el nombre" }), { status: 400 });
+    return new Response(
+      JSON.stringify({ error: "Falta el nombre" }),
+      { status: 400 }
+    );
   }
 
   const comando = ultimoComando[nombre] || null;

@@ -1,5 +1,4 @@
-// app/api/reportar/route.js
-let ultimoEstado = {};
+let ultimoEstado = {}; // ahora es un objeto por dispositivo
 
 export async function POST(req) {
   try {

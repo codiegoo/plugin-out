@@ -26,6 +26,7 @@ export default function Device() {
   }, [nombre]);
 
   const enviarComando = async (comando) => {
+    localStorage.setItem("ultimo_comando", comando);
     await fetch("/api/comando", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
