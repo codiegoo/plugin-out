@@ -26,9 +26,12 @@ export default function Device() {
   }, [nombre]);
 
   const enviarComando = async (comando) => {
-    const socket = io("https://mackerel-welcomed-sadly.ngrok-free.app", { path: "/" });
-    socket.emit("comando", { nombre, comando });
-  };
+    await fetch("/api/comando", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nombre: "sensorSala", comando }),
+    });
+  };  
 
   return (
     <section className="p-4 border rounded-lg bg-white shadow-md w-full max-w-md mx-auto">
