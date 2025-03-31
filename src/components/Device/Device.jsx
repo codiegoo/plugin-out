@@ -26,7 +26,7 @@ export default function Device() {
   }, [nombre]);
 
   const enviarComando = async (comando) => {
-    const socket = io("https://plugin-out.vercel.app", { path: "/api/socket" });
+    const socket = io("https://plugin-api-jj2a.onrender.com", { path: "/" });
     socket.emit("comando", { nombre, comando });
   };
 
