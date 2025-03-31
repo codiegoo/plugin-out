@@ -26,7 +26,7 @@ export default function Device() {
   }, [nombre]);
 
   const enviarComando = async (comando) => {
-    const socket = io("https://plugin-api-jj2a.onrender.com", { path: "/" });
+    const socket = io("https://mackerel-welcomed-sadly.ngrok-free.app", { path: "/" });
     socket.emit("comando", { nombre, comando });
   };
 
