@@ -9,10 +9,11 @@ export default function handler(req, res) {
     const io = new Server(res.socket.server, {
       path: "/api/socket",
       cors: {
-        origin: "*",
-      },
+        origin: "*", // 👈 permite cualquier origen
+        methods: ["GET", "POST"]
+      }
     });
-
+    
     io.on("connection", (socket) => {
       console.log("🟢 Cliente conectado");
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Test WebSocket</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h2>Conexión WebSocket a plugin-out.vercel.app</h2>
+  <pre id="log"></pre>
+
+  <script>
+    const log = (msg) => {
+      document.getElementById('log').textContent += msg + '\n';
+    };
+
+    const socket = io("https://plugin-out.vercel.app", {
+      path: "/api/socket"
+    });
+
+    socket.on("connect", () => log("🟢 Conectado al WebSocket"));
+    socket.on("disconnect", () => log("🔌 Desconectado"));
+    socket.on("comando", (cmd) => log("📥 Comando recibido: " + cmd));
+  </script>
+</body>
+</html>
