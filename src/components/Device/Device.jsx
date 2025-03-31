@@ -9,7 +9,7 @@ export default function Device() {
   useEffect(() => {
     const fetchDatos = async () => {
       try {
-        const res = await fetch(`/api/estado?nombre=${nombre}`);
+        const res = await fetch(`/api/reportar?nombre=${nombre}`);
         if (res.ok) {
           const data = await res.json();
           setTemperatura(data.temperatura);
