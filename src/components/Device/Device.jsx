@@ -4,7 +4,25 @@ import { useEffect, useState } from "react";
 export default function Device() {
   const [temperatura, setTemperatura] = useState("-");
   const [humedad, setHumedad] = useState("-");
-  const [nombre] = useState("sensorSala"); // o pásalo como prop
+  const [nombre, setNombre] = useState("");
+
+  const getNombre = async() => {
+    try {
+      const res = await fetch('/api/nombre')
+      if (res.ok) {
+        const data = await res.json();
+        setNombre(data.dispositivoNombre);
+      }
+    } catch (err) {
+      console.error("Error al obtener nombre del dispositivo", err);
+    }
+  }
+
+  useEffect(() => {
+    // Llamar a getNombre para obtener el nombre al montar el componente
+    getNombre();
+  }, []); // Se ejecuta solo una vez, cuando el componente se monta
+
 
   useEffect(() => {
     const fetchDatos = async () => {
@@ -30,7 +48,7 @@ export default function Device() {
     await fetch("/api/comando", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre: "sensorSala", comando }),
+      body: JSON.stringify({ nombre: nombre, comando }),
     });
   };  
 

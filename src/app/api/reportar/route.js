@@ -1,5 +1,8 @@
 let ultimoEstado = {}; // ahora es un objeto por dispositivo
 
+let dispositivoNombre = null; // almacenar nombre del dispositivo
+
+
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -12,6 +15,8 @@ export async function POST(req) {
       );
     }
 
+     // Guardar el nombre y los datos del dispositivo
+    dispositivoNombre = nombre;
     ultimoEstado[nombre] = { temperatura, humedad };
 
     return new Response(
@@ -26,6 +31,8 @@ export async function POST(req) {
     );
   }
 }
+
+
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
