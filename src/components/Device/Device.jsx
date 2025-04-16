@@ -6,22 +6,14 @@ export default function Device() {
   const [humedad, setHumedad] = useState("-");
   const [nombre, setNombre] = useState("");
 
-  const getNombre = async() => {
-    try {
-      const res = await fetch('/api/nombre')
-      if (res.ok) {
-        const data = await res.json();
-        setNombre(data.dispositivoNombre);
-      }
-    } catch (err) {
-      console.error("Error al obtener nombre del dispositivo", err);
-    }
-  }
 
   useEffect(() => {
-    // Llamar a getNombre para obtener el nombre al montar el componente
-    getNombre();
-  }, []); // Se ejecuta solo una vez, cuando el componente se monta
+    // Verifica si el nombre ya está en localStorage
+    const nombreGuardado = localStorage.getItem("dispositivoNombre");
+    if (nombreGuardado) {
+      setNombre(nombreGuardado);
+    }
+  }, []);
 
 
   useEffect(() => {

@@ -1,7 +1,5 @@
 let ultimoEstado = {}; // ahora es un objeto por dispositivo
-
 let dispositivoNombre = null; // almacenar nombre del dispositivo
-
 
 export async function POST(req) {
   try {
@@ -15,7 +13,7 @@ export async function POST(req) {
       );
     }
 
-     // Guardar el nombre y los datos del dispositivo
+    // Guardar el nombre y los datos del dispositivo
     dispositivoNombre = nombre;
     ultimoEstado[nombre] = { temperatura, humedad };
 
@@ -32,27 +30,33 @@ export async function POST(req) {
   }
 }
 
-
-
 export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const nombre = searchParams.get("nombre");
+  try {
+    const { searchParams } = new URL(req.url);
+    const nombre = searchParams.get("nombre");
 
-  if (!nombre) {
+    if (!nombre) {
+      return new Response(
+        JSON.stringify({ error: "Falta el nombre del dispositivo" }),
+        { status: 400 }
+      );
+    }
+
+    const estado = ultimoEstado[nombre];
+
+    if (!estado) {
+      return new Response(
+        JSON.stringify({ error: "Dispositivo no encontrado" }),
+        { status: 404 }
+      );
+    }
+
+    return new Response(JSON.stringify(estado), { status: 200 });
+  } catch (error) {
+    console.error('Error al obtener el estado del dispositivo:', error);
     return new Response(
-      JSON.stringify({ error: "Falta el nombre del dispositivo" }),
-      { status: 400 }
+      JSON.stringify({ error: "Error interno del servidor" }),
+      { status: 500 }
     );
   }
-
-  const estado = ultimoEstado[nombre];
-
-  if (!estado) {
-    return new Response(
-      JSON.stringify({ error: "Dispositivo no encontrado" }),
-      { status: 404 }
-    );
-  }
-
-  return new Response(JSON.stringify(estado), { status: 200 });
 }
