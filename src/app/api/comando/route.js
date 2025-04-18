@@ -14,7 +14,12 @@ export async function POST(req) {
 
   return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
 }
-// En tu handler GET en la API (Next.js o similar)
+
+
+
+
+
+// app/api/comando/route.js
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const nombre = searchParams.get("nombre");
@@ -25,19 +30,20 @@ export async function GET(req) {
       status: 400,
       headers: {
         "Content-Type": "text/plain",
-        "Content-Length": err.length.toString(),
+        "Content-Length": Buffer.byteLength(err).toString(),
         "Cache-Control": "no-store",
         "Content-Encoding": "identity"
       }
     });
   }
 
-  const comando = ultimoComando[nombre] || "";
+  const comando = (ultimoComando[nombre] || "").trim();
+
   return new Response(comando, {
     status: 200,
     headers: {
       "Content-Type": "text/plain",
-      "Content-Length": comando.length.toString(),
+      "Content-Length": Buffer.byteLength(comando).toString(),
       "Cache-Control": "no-store",
       "Content-Encoding": "identity"
     }
