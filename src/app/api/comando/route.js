@@ -14,37 +14,32 @@ export async function POST(req) {
 
   return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
 }
-
-
+// En tu handler GET en la API (Next.js o similar)
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const nombre = searchParams.get("nombre");
 
   if (!nombre) {
-    return new Response(
-      JSON.stringify({ error: "Falta el nombre" }),
-      {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": JSON.stringify({ error: "Falta el nombre" }).length.toString(),
-          "Cache-Control": "no-store",
-          "Content-Encoding": "identity",
-        },
+    const err = "Falta el nombre";
+    return new Response(err, {
+      status: 400,
+      headers: {
+        "Content-Type": "text/plain",
+        "Content-Length": err.length.toString(),
+        "Cache-Control": "no-store",
+        "Content-Encoding": "identity"
       }
-    );
+    });
   }
 
   const comando = ultimoComando[nombre] || "";
-  const json = JSON.stringify({ comando });
-
-  return new Response(json, {
+  return new Response(comando, {
     status: 200,
     headers: {
-      "Content-Type": "application/json",
-      "Content-Length": json.length.toString(), // 👈 Este es el que faltaba
+      "Content-Type": "text/plain",
+      "Content-Length": comando.length.toString(),
       "Cache-Control": "no-store",
-      "Content-Encoding": "identity",
-    },
+      "Content-Encoding": "identity"
+    }
   });
 }
