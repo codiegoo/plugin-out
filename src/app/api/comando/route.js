@@ -15,6 +15,7 @@ export async function POST(req) {
   return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
 }
 
+
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const nombre = searchParams.get("nombre");
@@ -22,18 +23,28 @@ export async function GET(req) {
   if (!nombre) {
     return new Response(
       JSON.stringify({ error: "Falta el nombre" }),
-      { status: 400 }
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": JSON.stringify({ error: "Falta el nombre" }).length.toString(),
+          "Cache-Control": "no-store",
+          "Content-Encoding": "identity",
+        },
+      }
     );
   }
 
   const comando = ultimoComando[nombre] || "";
+  const json = JSON.stringify({ comando });
 
-  return new Response(JSON.stringify({ comando }), {
+  return new Response(json, {
     status: 200,
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "no-store",  // Asegura que no se cachee la respuesta
-      "Content-Encoding": "identity",  // Evita la compresión
+      "Content-Length": json.length.toString(), // 👈 Este es el que faltaba
+      "Cache-Control": "no-store",
+      "Content-Encoding": "identity",
     },
   });
 }
