@@ -1,9 +1,6 @@
 import { connection } from '@/lib/mongooseConnection'; // Para la conexión a MongoDB
 import Device from '@/model/devicesModel'; // El modelo de dispositivo
 
-// Endpoint POST para recibir datos desde el ESP32
-import { connection } from '@/lib/mongooseConnection';
-import Device from '@/model/devicesModel';
 
 export async function POST(req) {
   try {
