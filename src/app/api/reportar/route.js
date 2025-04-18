@@ -2,30 +2,33 @@ import { connection } from '@/lib/mongooseConnection'; // Para la conexión a Mo
 import Device from '@/model/devicesModel'; // El modelo de dispositivo
 
 // Endpoint POST para recibir datos desde el ESP32
+import { connection } from '@/lib/mongooseConnection';
+import Device from '@/model/devicesModel';
+
 export async function POST(req) {
-
-  const json = await req.json();
-  console.log("JSON recibido:", json);
-
-
   try {
-    await connection(); // Conectar a MongoDB
+    const json = await req.json();
+    console.log("JSON recibido:", json);
 
-    const { name, temperature, humidity, type = 'sensor' } = await req.json();
+    await connection();
+
+    const { name, temperature, humidity, type = 'sensor' } = json;
     const decodedName = decodeURIComponent(name);
 
-
-    if (!name || temperature == null || humidity == null) {
-      return new Response(JSON.stringify({ error: "Faltan campos requeridos" }), { status: 400 });
+    if (!decodedName || temperature == null || humidity == null) {
+      return new Response(
+        JSON.stringify({ error: "Faltan campos requeridos" }),
+        { status: 400 }
+      );
     }
 
-    // Crear o actualizar el dispositivo
     const update = {
+      name: decodedName,
       type,
       last_data: {
         temperature,
         humidity,
-        timestamp: new Date() // Hora exacta de la actualización
+        timestamp: new Date()
       }
     };
 
@@ -34,13 +37,15 @@ export async function POST(req) {
       update,
       { upsert: true, new: true }
     );
-    
 
     return new Response(JSON.stringify({ success: true, device }), { status: 200 });
 
   } catch (error) {
     console.error('Error guardando datos del dispositivo:', error);
-    return new Response(JSON.stringify({ error: 'Error al guardar' }), { status: 500 });
+    return new Response(
+      JSON.stringify({ error: 'Error al guardar' }),
+      { status: 500 }
+    );
   }
 }
 
