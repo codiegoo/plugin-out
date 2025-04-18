@@ -26,7 +26,7 @@ export async function GET(req) {
     );
   }
 
-  const comando = ultimoComando[nombre] || null;
+  const comando = ultimoComando[nombre] || "";
 
   return new Response(JSON.stringify({ comando }), { status: 200 });
 }
