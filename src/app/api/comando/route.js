@@ -18,8 +18,6 @@ export async function POST(req) {
 
 
 
-
-// app/api/comando/route.js
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const nombre = searchParams.get("nombre");
@@ -38,6 +36,9 @@ export async function GET(req) {
   }
 
   const comando = (ultimoComando[nombre] || "").trim();
+
+  // Verifica que el comando que se va a devolver no esté vacío
+  console.log(`Comando para ${nombre}: ${comando}`);
 
   return new Response(comando, {
     status: 200,
