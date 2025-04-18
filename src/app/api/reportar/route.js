@@ -1,62 +1,66 @@
-let ultimoEstado = {}; // ahora es un objeto por dispositivo
-let dispositivoNombre = null; // almacenar nombre del dispositivo
+import { connection } from '@/lib/mongooseConnection'; // Para la conexión a MongoDB
+import Device from '@/model/devicesModel'; // El modelo de dispositivo
 
+// Endpoint POST para recibir datos desde el ESP32
 export async function POST(req) {
   try {
-    const body = await req.json();
-    const { nombre, temperatura, humedad } = body;
+    await connection(); // Conectar a MongoDB
 
-    if (!nombre) {
-      return new Response(
-        JSON.stringify({ error: "Falta el nombre del dispositivo" }),
-        { status: 400 }
-      );
+    const { name, temperature, humidity, type = 'sensor' } = await req.json();
+
+    if (!name || temperature == null || humidity == null) {
+      return new Response(JSON.stringify({ error: "Faltan campos requeridos" }), { status: 400 });
     }
 
-    // Guardar el nombre y los datos del dispositivo
-    dispositivoNombre = nombre;
-    ultimoEstado[nombre] = { temperatura, humedad };
+    // Crear o actualizar el dispositivo
+    const update = {
+      type,
+      last_data: {
+        temperature,
+        humidity,
+        timestamp: new Date() // Hora exacta de la actualización
+      }
+    };
 
-    return new Response(
-      JSON.stringify({ status: "OK", recibido: true }),
-      { status: 200 }
+    // Usamos `upsert: true` para crear un nuevo dispositivo si no existe
+    const device = await Device.findOneAndUpdate(
+      { name }, // Buscar por el nombre del dispositivo
+      update,    // Actualizar o crear con los datos
+      { upsert: true, new: true } // Si no existe, lo crea; si existe, lo actualiza
     );
+
+    return new Response(JSON.stringify({ success: true, device }), { status: 200 });
+
   } catch (error) {
-    console.error(error);
-    return new Response(
-      JSON.stringify({ error: "Error interno del servidor" }),
-      { status: 500 }
-    );
+    console.error('Error guardando datos del dispositivo:', error);
+    return new Response(JSON.stringify({ error: 'Error al guardar' }), { status: 500 });
   }
 }
 
+// Endpoint GET para obtener el estado actual del dispositivo
 export async function GET(req) {
   try {
+    await connection(); // Conectar a MongoDB
+
     const { searchParams } = new URL(req.url);
-    const nombre = searchParams.get("nombre");
+    const name = searchParams.get("name");
 
-    if (!nombre) {
-      return new Response(
-        JSON.stringify({ error: "Falta el nombre del dispositivo" }),
-        { status: 400 }
-      );
+    if (!name) {
+      return new Response(JSON.stringify({ error: "Falta el nombre del dispositivo" }), { status: 400 });
     }
 
-    const estado = ultimoEstado[nombre];
+    // Buscar el dispositivo por su nombre
+    const device = await Device.findOne({ name });
 
-    if (!estado) {
-      return new Response(
-        JSON.stringify({ error: "Dispositivo no encontrado" }),
-        { status: 404 }
-      );
+    if (!device) {
+      return new Response(JSON.stringify({ error: "Dispositivo no encontrado" }), { status: 404 });
     }
 
-    return new Response(JSON.stringify(estado), { status: 200 });
+    // Devolver el estado actual del dispositivo
+    return new Response(JSON.stringify(device.last_data), { status: 200 });
+
   } catch (error) {
-    console.error('Error al obtener el estado del dispositivo:', error);
-    return new Response(
-      JSON.stringify({ error: "Error interno del servidor" }),
-      { status: 500 }
-    );
+    console.error('Error al obtener datos del dispositivo:', error);
+    return new Response(JSON.stringify({ error: "Error al consultar" }), { status: 500 });
   }
 }
