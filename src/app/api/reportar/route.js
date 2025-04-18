@@ -3,10 +3,17 @@ import Device from '@/model/devicesModel'; // El modelo de dispositivo
 
 // Endpoint POST para recibir datos desde el ESP32
 export async function POST(req) {
+
+  const json = await req.json();
+  console.log("JSON recibido:", json);
+
+
   try {
     await connection(); // Conectar a MongoDB
 
     const { name, temperature, humidity, type = 'sensor' } = await req.json();
+    const decodedName = decodeURIComponent(name);
+
 
     if (!name || temperature == null || humidity == null) {
       return new Response(JSON.stringify({ error: "Faltan campos requeridos" }), { status: 400 });
@@ -22,12 +29,12 @@ export async function POST(req) {
       }
     };
 
-    // Usamos `upsert: true` para crear un nuevo dispositivo si no existe
     const device = await Device.findOneAndUpdate(
-      { name }, // Buscar por el nombre del dispositivo
-      update,    // Actualizar o crear con los datos
-      { upsert: true, new: true } // Si no existe, lo crea; si existe, lo actualiza
+      { name: decodedName },
+      update,
+      { upsert: true, new: true }
     );
+    
 
     return new Response(JSON.stringify({ success: true, device }), { status: 200 });
 
