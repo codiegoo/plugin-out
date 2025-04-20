@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import './temperature.sass';
+
 import { useEffect, useState } from 'react';
 
 export default function Temperature({ temperatura }) {

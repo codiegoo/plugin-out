@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import '../Temperature/temperature.sass'; // puedes renombrar si necesitas
+
 import { useEffect, useState } from 'react';
 
 export default function Humedity({ humedad }) {

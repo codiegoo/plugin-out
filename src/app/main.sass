@@ -35,10 +35,12 @@ a
 
 
 
-@media (max-width: 440px) 
+@media (max-width: 440px)
   .deviceContain
-    width: 100%
-    height: 99vh
+    width: 100% !important
+    height: 99vh !important
+  
+  
 
 
 
@@ -46,50 +48,59 @@ a
 /* Extra pequeño (teléfonos en vertical) */
 @media (max-width: 600px) 
   .deviceContain
-    gap: 4rem
+    gap: 4rem !important
+
+  .textContain
+    flex-direction: column !important
 
   .dataContain
-    flex-direction: column
-    gap: 2rem
+    flex-direction: column !important
+    gap: 2rem !important
 
   .cardContainer
-    width: auto
+    width: auto !important
 
   .card
-    width: 80%
-    height:20rem
+    width: 80% !important
+    height:20rem !important
 
   .city
-    font-size: 1.5rem
+    font-size: 1.5rem !important
 
   .temp
-    font-size: 2.5
+    font-size: 2.5rem !important
 
   .minHeading
-    font-size: 1.2rem
+    font-size: 1.2rem !important
+
+  .maxHeading
+    font-size: 1.2rem !important
 
   .minTemp
-    font-size: 1.2
+    font-size: 1.2rem !important
+
+  .maxTemp
+    font-size: 1.2rem !important
 
   .toggle-container
-    margin-right: 38%
+    margin-right: 38% !important
   
   .textContain
-    gap: 1rem
+    gap: 1rem !important
 
 /* Pequeño (teléfonos grandes) */
 @media (min-width: 695px)
   .deviceContain
-    width: 75% 
+    width: 75% !important
 /* Mediano (tablets) */
 @media (min-width: 835px) 
   .deviceContain
-    width: 65% 
+    width: 65%  !important
 /* Grande (laptops) */
 @media (min-width: 980px)
   .deviceContain
-    width: 54% 
+    width: 54% !important
 /* Extra grande (pantallas de escritorio grandes) */
 @media (min-width: 1125px)
   .deviceContain
-    width: 46% 
+    width: 46% !important
