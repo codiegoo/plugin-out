@@ -32,3 +32,64 @@ a
 @media (prefers-color-scheme: dark)
   html
     color-scheme: dark
+
+
+
+@media (max-width: 440px) 
+  .deviceContain
+    width: 100%
+    height: 99vh
+
+
+
+
+/* Extra pequeño (teléfonos en vertical) */
+@media (max-width: 600px) 
+  .deviceContain
+    gap: 4rem
+
+  .dataContain
+    flex-direction: column
+    gap: 2rem
+
+  .cardContainer
+    width: auto
+
+  .card
+    width: 80%
+    height:20rem
+
+  .city
+    font-size: 1.5rem
+
+  .temp
+    font-size: 2.5
+
+  .minHeading
+    font-size: 1.2rem
+
+  .minTemp
+    font-size: 1.2
+
+  .toggle-container
+    margin-right: 38%
+  
+  .textContain
+    gap: 1rem
+
+/* Pequeño (teléfonos grandes) */
+@media (min-width: 695px)
+  .deviceContain
+    width: 75% 
+/* Mediano (tablets) */
+@media (min-width: 835px) 
+  .deviceContain
+    width: 65% 
+/* Grande (laptops) */
+@media (min-width: 980px)
+  .deviceContain
+    width: 54% 
+/* Extra grande (pantallas de escritorio grandes) */
+@media (min-width: 1125px)
+  .deviceContain
+    width: 46% 
