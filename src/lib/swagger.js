@@ -11,11 +11,11 @@ const options = {
     },
   },
   apis: [
-    path.join(process.cwd(), './src/app/api/comando/route.js'),
-    path.join(process.cwd(), './src/app/api/reportar/route.js'),
-    path.join(process.cwd(), './src/app/api/getnombre/route.js'),
-    path.join(process.cwd(), './src/app/api/comando-customizado/route.js')
-  ],
+    './src/app/api/comando/route.js',
+    './src/app/api/reportar/route.js',
+    './src/app/api/getnombre/route.js',
+    './src/app/api/comando-customizado/route.js'
+  ],  
 }
 
 export const swaggerSpec = swaggerJSDoc(options)
