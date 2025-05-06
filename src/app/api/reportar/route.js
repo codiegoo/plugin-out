@@ -1,6 +1,77 @@
 import { connection } from '@/lib/mongooseConnection'; // Para la conexión a MongoDB
 import Device from '@/model/devicesModel'; // El modelo de dispositivo
 
+/**
+ * @swagger
+ * /api/reportar:
+ *   post:
+ *     summary: Reporta datos desde ESP32
+ *     tags: [Reportar]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             title: Datos de reporte
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: sensor001
+ *               temperature:
+ *                 type: number
+ *                 example: 23.5
+ *               humidity:
+ *                 type: number
+ *                 example: 60.2
+ *     responses:
+ *       200:
+ *         description: Datos guardados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 device:
+ *                   type: object
+ */
+
+/**
+ * @swagger
+ * /api/reportar:
+ *   get:
+ *     summary: Obtiene el último estado del dispositivo
+ *     tags: [Comando]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nombre del dispositivo
+ *     responses:
+ *       200:
+ *         description: Último estado reportado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               title: Último dato reportado
+ *               properties:
+ *                 temperature:
+ *                   type: number
+ *                   example: 22.7
+ *                 humidity:
+ *                   type: number
+ *                   example: 59.4
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *       404:
+ *         description: Dispositivo no encontrado
+ */
 
 export async function POST(req) {
   try {
@@ -46,7 +117,7 @@ export async function POST(req) {
   }
 }
 
-// Endpoint GET para obtener el estado actual del dispositivo
+
 export async function GET(req) {
   try {
     await connection(); // Conectar a MongoDB

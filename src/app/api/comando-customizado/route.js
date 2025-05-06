@@ -3,6 +3,103 @@
 import { connection } from '@/lib/mongooseConnection';
 import CustomCommand from '@/model/mongooseModels';
 
+
+/**
+ * @swagger
+ * /api/comando-customizado:
+ *   post:
+ *     summary: Crea un nuevo comando personalizado
+ *     tags: [Comando-customizado]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: string
+ *                 example: "654321"
+ *               name:
+ *                 type: string
+ *                 example: "Encender luz"
+ *               action:
+ *                 type: string
+ *                 example: "ON"
+ *     responses:
+ *       200:
+ *         description: Comando creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 command:
+ *                   type: object
+ *       500:
+ *         description: Error al guardar el comando
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error al guardar el comando
+ */
+
+/**
+ * @swagger
+ * /api/custom-commands:
+ *   get:
+ *     summary: Obtiene los comandos personalizados de un usuario
+ *     tags: [Comando]
+ *     parameters:
+ *       - in: query
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Lista de comandos personalizados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 commands:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       400:
+ *         description: Falta user_id en la query
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Falta user_id en la query
+ *       500:
+ *         description: Error al obtener los comandos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error al obtener los comandos
+ */
+
+
 export async function POST(req) {
   try {
     await connection();

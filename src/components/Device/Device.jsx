@@ -141,6 +141,10 @@ export default function Device() {
           </div>
         </>
       )}
+
+      <a href="/docs" className="mt-4 inline-block text-blue-500 underline">
+        Ver documentación Swagger
+      </a>
     </section>
   );
 }
