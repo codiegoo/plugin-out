@@ -7,6 +7,6 @@ export default function SwaggerRedirect() {
     window.location.href = '/swagger/docs.html'
   }, [])
 
-  return <p>Cargando documentación Swagger...</p>
+  return <p>Cargando documentación en Swagger...</p>
 }
   
