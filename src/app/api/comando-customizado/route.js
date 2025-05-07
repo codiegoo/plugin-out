@@ -55,7 +55,7 @@ import CustomCommand from '@/model/mongooseModels';
  * /api/custom-commands:
  *   get:
  *     summary: Obtiene los comandos personalizados de un usuario
- *     tags: [Comando]
+ *     tags: [Comando-customizado]
  *     parameters:
  *       - in: query
  *         name: user_id

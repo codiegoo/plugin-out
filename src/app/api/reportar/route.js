@@ -43,7 +43,7 @@ import Device from '@/model/devicesModel'; // El modelo de dispositivo
  * /api/reportar:
  *   get:
  *     summary: Obtiene el último estado del dispositivo
- *     tags: [Comando]
+ *     tags: [Reportar]
  *     parameters:
  *       - in: query
  *         name: name
