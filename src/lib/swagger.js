@@ -1,10 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc'
 import path from 'path'
-import { fileURLToPath } from 'url'
-
-// Para que __dirname funcione en módulos ES
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 const options = {
   definition: {
@@ -15,10 +10,10 @@ const options = {
     },
   },
   apis: [
-    path.resolve(__dirname, '../app/api/comando/route.js'),
-    path.resolve(__dirname, '../app/api/reportar/route.js'),
-    path.resolve(__dirname, '../app/api/getnombre/route.js'),
-    path.resolve(__dirname, '../app/api/comando-customizado/route.js')
+    path.join(process.cwd(), 'src/app/api/comando/route.js'),
+    path.join(process.cwd(), 'src/app/api/reportar/route.js'),
+    path.join(process.cwd(), 'src/app/api/getnombre/route.js'),
+    path.join(process.cwd(), 'src/app/api/comando-customizado/route.js')
   ]
 }
 
