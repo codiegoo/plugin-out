@@ -1,5 +1,11 @@
 import swaggerJSDoc from 'swagger-jsdoc'
 import path from 'path'
+// Forzar la inclusión de las rutas en el build de Vercel
+import '@/app/api/comando/route.js'
+import '@/app/api/reportar/route.js'
+import '@/app/api/getnombre/route.js'
+import '@/app/api/comando-customizado/route.js'
+
 
 const options = {
   definition: {
