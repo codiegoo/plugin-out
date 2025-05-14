@@ -1,135 +1,46 @@
 // app/api/custom-commands/route.js
 
-import { connection } from '@/lib/mongooseConnection';
-import CustomCommand from '@/model/mongooseModels';
+import { connection } from '@/lib/mongooseConnection'; // Conexión a MongoDB
+import CustomCommand from '@/model/mongooseModels'; // Modelo de comandos personalizados
 
-
-/**
- * @swagger
- * /api/comando-customizado:
- *   post:
- *     summary: Crea un nuevo comando personalizado
- *     tags: [Comando-customizado]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user_id:
- *                 type: string
- *                 example: "654321"
- *               name:
- *                 type: string
- *                 example: "Encender luz"
- *               action:
- *                 type: string
- *                 example: "ON"
- *     responses:
- *       200:
- *         description: Comando creado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 command:
- *                   type: object
- *       500:
- *         description: Error al guardar el comando
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error al guardar el comando
- */
-
-/**
- * @swagger
- * /api/custom-commands:
- *   get:
- *     summary: Obtiene los comandos personalizados de un usuario
- *     tags: [Comando-customizado]
- *     parameters:
- *       - in: query
- *         name: user_id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario
- *     responses:
- *       200:
- *         description: Lista de comandos personalizados
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 commands:
- *                   type: array
- *                   items:
- *                     type: object
- *       400:
- *         description: Falta user_id en la query
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Falta user_id en la query
- *       500:
- *         description: Error al obtener los comandos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error al obtener los comandos
- */
-
-
+// Endpoint POST para crear un nuevo comando personalizado
 export async function POST(req) {
   try {
-    await connection();
-    const body = await req.json();
+    await connection(); // Conectar a MongoDB
+    const body = await req.json(); // Leer el cuerpo de la solicitud como JSON
 
+    // Crear un nuevo documento en la colección de comandos personalizados
     const command = await CustomCommand.create(body);
+
+    // Responder con éxito y el comando creado
     return Response.json({ success: true, command });
   } catch (error) {
+    // Manejar errores en consola y devolver un error 500
     console.error('Error creando comando:', error);
     return new Response(JSON.stringify({ error: 'Error al guardar el comando' }), { status: 500 });
   }
 }
 
-
-
+// Endpoint GET para obtener los comandos de un usuario específico
 export async function GET(req) {
   try {
-    await connection();
+    await connection(); // Conectar a MongoDB
 
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('user_id');
+    const { searchParams } = new URL(req.url); // Extraer parámetros de la URL
+    const userId = searchParams.get('user_id'); // Obtener el user_id de la query
 
+    // Validar que se haya proporcionado user_id
     if (!userId) {
       return new Response(JSON.stringify({ error: 'Falta user_id en la query' }), { status: 400 });
     }
 
+    // Buscar todos los comandos del usuario, ordenados por fecha de creación descendente
     const commands = await CustomCommand.find({ user_id: userId }).sort({ created_at: -1 });
 
+    // Responder con éxito y la lista de comandos
     return Response.json({ success: true, commands });
   } catch (error) {
+    // Manejar errores en consola y devolver un error 500
     console.error('Error obteniendo comandos:', error);
     return new Response(JSON.stringify({ error: 'Error al obtener los comandos' }), { status: 500 });
   }

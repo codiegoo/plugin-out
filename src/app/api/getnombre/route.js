@@ -1,61 +1,25 @@
 import { connection } from '@/lib/mongooseConnection'; // Para la conexión a MongoDB
 import Device from '@/model/devicesModel'; // El modelo de dispositivo
-/**
- * @swagger
- * /api/getnombre:
- *   get:
- *     summary: Obtiene el nombre del primer dispositivo registrado
- *     tags: [Nombre]
- *     responses:
- *       200:
- *         description: Nombre del dispositivo encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 name:
- *                   type: string
- *                   example: dispositivo_001
- *       404:
- *         description: No hay dispositivos registrados
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: No hay dispositivos registrados
- *       500:
- *         description: Error al consultar
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error al consultar
- */
 
-// Endpoint GET para obtener el nombre del dispositivo
+// Endpoint GET para obtener el nombre del primer dispositivo registrado
 export async function GET(req) {
   try {
-    await connection(); // Conectar a MongoDB
+    await connection(); // Establecer conexión con MongoDB
 
-    // Buscar el primer dispositivo disponible
-    const device = await Device.findOne().select('name'); // Obtener solo el campo 'name'
+    // Buscar el primer dispositivo registrado en la colección y seleccionar solo el campo 'name'
+    const device = await Device.findOne().select('name');
 
+    // Si no se encuentra ningún dispositivo, responder con error 404
     if (!device) {
       return new Response(JSON.stringify({ error: "No hay dispositivos registrados" }), { status: 404 });
     }
 
-    // Devolver el nombre del dispositivo
+    // Si se encuentra un dispositivo, devolver su nombre
     return new Response(JSON.stringify({ name: device.name }), { status: 200 });
 
   } catch (error) {
+    // Capturar y mostrar errores en consola
     console.error('Error al obtener el nombre del dispositivo:', error);
-    return new Response(JSON.stringify({ error: "Error al consultar" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Error al consultar" }), { status: 500 }); // Error interno del servidor
   }
 }

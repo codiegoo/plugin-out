@@ -1,125 +1,57 @@
-/**
- * @swagger
- * /api/comando:
- *   post:
- *     summary: Registra el último comando enviado a un dispositivo
- *     tags: [Comando]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nombre:
- *                 type: string
- *                 example: "sensor01"
- *               comando:
- *                 type: string
- *                 example: "ON"
- *     responses:
- *       200:
- *         description: Comando guardado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: OK
- *       400:
- *         description: Faltan datos requeridos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Faltan datos
- */
+let ultimoComando = {}; // Objeto para almacenar el último comando enviado por cada dispositivo, usando su nombre como clave
 
-/**
- * @swagger
- * /api/comando:
- *   get:
- *     summary: Obtiene el último comando para un dispositivo específico
- *     tags: [Comando]
- *     parameters:
- *       - in: query
- *         name: nombre
- *         required: true
- *         schema:
- *           type: string
- *         description: Nombre del dispositivo
- *     responses:
- *       200:
- *         description: Último comando en texto plano
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: ON
- *       400:
- *         description: Falta el nombre del dispositivo
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: Falta el nombre
- */
-
-
-let ultimoComando = {}; // comandos por dispositivo
-
+// Endpoint POST para registrar el último comando recibido para un dispositivo
 export async function POST(req) {
-  const { nombre, comando } = await req.json();
+  const { nombre, comando } = await req.json(); // Obtener los datos del cuerpo de la solicitud
 
+  // Validar que se hayan recibido ambos campos
   if (!nombre || !comando) {
     return new Response(
-      JSON.stringify({ error: "Faltan datos" }),
-      { status: 400 }
+      JSON.stringify({ error: "Faltan datos" }), // Mensaje de error si falta algún campo
+      { status: 400 } // Código de estado 400: Bad Request
     );
   }
 
+  // Guardar el comando como el último recibido para ese dispositivo
   ultimoComando[nombre] = comando;
 
+  // Responder con estado OK
   return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
 }
 
-
-
-
+// Endpoint GET para obtener el último comando enviado a un dispositivo
 export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const nombre = searchParams.get("nombre");
+  const { searchParams } = new URL(req.url); // Extraer parámetros de la URL
+  const nombre = searchParams.get("nombre"); // Obtener el nombre del dispositivo
 
+  // Validar que se haya proporcionado el nombre
   if (!nombre) {
     const err = "Falta el nombre";
     return new Response(err, {
-      status: 400,
+      status: 400, // Código de estado 400: Bad Request
       headers: {
-        "Content-Type": "text/plain",
-        "Content-Length": Buffer.byteLength(err).toString(),
-        "Cache-Control": "no-store",
-        "Content-Encoding": "identity"
+        "Content-Type": "text/plain", // La respuesta es texto plano
+        "Content-Length": Buffer.byteLength(err).toString(), // Longitud del contenido en bytes
+        "Cache-Control": "no-store", // Evitar cachear la respuesta
+        "Content-Encoding": "identity" // Sin compresión
       }
     });
   }
 
+  // Obtener el último comando asociado al nombre, o cadena vacía si no existe
   const comando = (ultimoComando[nombre] || "").trim();
 
-  // Verifica que el comando que se va a devolver no esté vacío
+  // Mostrar en consola el comando recuperado para ese dispositivo
   console.log(`Comando para ${nombre}: ${comando}`);
 
+  // Responder con el comando en texto plano
   return new Response(comando, {
-    status: 200,
+    status: 200, // Código de estado 200: OK
     headers: {
-      "Content-Type": "text/plain",
-      "Content-Length": Buffer.byteLength(comando).toString(),
-      "Cache-Control": "no-store",
-      "Content-Encoding": "identity"
+      "Content-Type": "text/plain", // Tipo de contenido texto plano
+      "Content-Length": Buffer.byteLength(comando).toString(), // Longitud del contenido
+      "Cache-Control": "no-store", // No almacenar en caché
+      "Content-Encoding": "identity" // Sin codificación
     }
   });
 }

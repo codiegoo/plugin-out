@@ -9,4 +9,3 @@ export default function SwaggerRedirect() {
 
   return <p>Cargando documentación en Swagger...</p>
 }
-  
